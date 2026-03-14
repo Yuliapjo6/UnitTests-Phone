@@ -1,4 +1,5 @@
-﻿using ClassLibrary;
+﻿using System;
+using ClassLibrary;
 namespace TestProject2
 {
     [TestClass]
@@ -16,8 +17,8 @@ namespace TestProject2
             Assert.AreEqual(owner, phone.Owner);
             Assert.AreEqual(phoneNumber, phone.PhoneNumber);
         }
-            [TestMethod]
-            public void Kostruktor_DaneNiepoprawne_OwnerPusty()
+        [TestMethod]
+        public void Kostruktor_DaneNiepoprawne_OwnerPusty()
         {
             //Arrange
             string owner = "";
@@ -27,7 +28,7 @@ namespace TestProject2
             Assert.Throws<ArgumentException>(() => new Phone(owner, phoneNumber));
         }
         [TestMethod]
-            public void Kostruktor_DaneNiepoprawne_OwnerNull()
+        public void Kostruktor_DaneNiepoprawne_OwnerNull()
         {
             //Arrange
             string owner = null;
@@ -37,7 +38,7 @@ namespace TestProject2
             Assert.Throws<ArgumentException>(() => new Phone(owner, phoneNumber));
         }
         [TestMethod]
-            public void Kostruktor_DaneNiepoprawne_NumerTelefonuNull()
+        public void Kostruktor_DaneNiepoprawne_NumerTelefonuNull()
         {
             //Arrange
             string owner = "Pavlishak";
@@ -49,7 +50,7 @@ namespace TestProject2
         [TestMethod]
         [DataRow("123")]
         [DataRow("12345678901233456797")]
-            public void Kostruktor_DaneNiepoprawne_NumerTelefonuZlejDlugosci(string nrTel)
+        public void Kostruktor_DaneNiepoprawne_NumerTelefonuZlejDlugosci(string nrTel)
         {
             //Arrange
             string owner = "Pavlishak";
@@ -61,7 +62,7 @@ namespace TestProject2
         [TestMethod]
         [DataRow("la123658670")]
         [DataRow("1234567890.")]
-            public void Kostruktor_DaneNiepoprawne_NumerTelefonuNieTylkoCyfry(string nrTel)
+        public void Kostruktor_DaneNiepoprawne_NumerTelefonuNieTylkoCyfry(string nrTel)
         {
             //Arrange
             string owner = "Pavlishak";
@@ -69,6 +70,40 @@ namespace TestProject2
 
             //Act & Assert
             Assert.Throws<ArgumentException>(() => new Phone(owner, phoneNumber));
+        }
+        // Testy dodawanie kontaktów
+        [TestMethod]
+        public void AddContact_NowyKontakt_PowinnoDodacNowyKontakt()
+        {
+            var phone = new Phone("Pavlishak", "123456789");
+            var wynik = phone.AddContact("Adam", "987654321");
+            //Assert 
+            Assert.IsTrue(wynik);
+            Assert.AreEqual(1, phone.Count);
+        }
+        [TestMethod]
+        public void AddContakt_DublikacjaKontaktu()
+        {
+            var phone = new Phone("Pavlishak", "123456789");
+
+            phone.AddContact("Adam", "987654321");
+            var wynik = phone.AddContact("Adam", "1111111111");
+            //Assert
+            Assert.IsFalse(wynik);
+            Assert.AreEqual(1, phone.Count);
+        }
+        [TestMethod]
+        public void AddContakt_TelefonicznaKsiazka_JestZapelniona()
+        {
+            var phone = new Phone("Pavlishak", "123456789");
+
+            for (int i = 0; i < phone.PhoneBookCapacity; i++)
+            {
+                phone.AddContact($"Kontakt{i}", "111111111");
+
+            }
+            //Assert
+            Assert.Throws<InvalidOperationException>(() => phone.AddContact("Przepełnienie", "222222222"));
         }
     }
 }

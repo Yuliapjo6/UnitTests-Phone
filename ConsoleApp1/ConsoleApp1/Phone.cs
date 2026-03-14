@@ -6,9 +6,9 @@ namespace ClassLibrary
 {
     public class Phone
     {
-        private string owner;
+        private string owner = string.Empty;
         // string of 9 digits
-        private string phoneNumber;
+        private string phoneNumber = string.Empty;
         // Dictionary of <name, number>
         private readonly Dictionary<string, string> phoneBook;
         public int PhoneBookCapacity => 100;
