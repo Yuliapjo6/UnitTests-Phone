@@ -105,5 +105,24 @@ namespace TestProject2
             //Assert
             Assert.Throws<InvalidOperationException>(() => phone.AddContact("Przepełnienie", "222222222"));
         }
+
+        // Testy Call
+        [TestMethod]
+        public void Call_OsobaIstniejeWKsiazce()
+        {
+            var phone = new Phone("Pavlishak", "123456789");
+            phone.AddContact("Adam", "987654321");
+
+            string wynik = phone.Call("Adam");
+            //Assert
+            Assert.AreEqual("Calling 987654321 (Adam) ...", wynik);
+        }
+        [TestMethod]
+        public void Call_OsobaNieIstniejeWKsiazce()
+        {
+            var phone = new Phone("Pavlishak", "123456789");
+            //Assert
+            Assert.Throws<InvalidOperationException>(() => phone.Call("Nieznany"));
+        }
     }
 }
